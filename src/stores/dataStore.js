@@ -7,12 +7,17 @@ export const useDataStore = defineStore("data", () => {
   const categories = ref([]);
 
   const getItems = async () => {
-    const { data, error } = await supabase.from("items").select(`
+    const { data, error } = await supabase
+      .from("items")
+      .select(
+        `
     *,
     categories (
       name
     )
-  `);
+  `,
+      )
+      .order("stock", { ascending: false });
     items.value = data;
   };
 
