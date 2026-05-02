@@ -1,10 +1,12 @@
 <script setup>
-import { computed, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useTakeStore } from "../../stores/takeStore";
+import { useAdminStore } from "../../stores/adminStore";
 import Table from "./Table.vue";
 import ExportModal from "./ExportModal.vue";
 
 const takeStore = useTakeStore();
+const adminStore = useAdminStore();
 
 const search = ref("");
 const filterItem = ref("");
@@ -51,6 +53,10 @@ const resetFilter = () => {
 
 watch(filteredTx, () => {
   currentPage.value = 1;
+});
+
+onMounted(async () => {
+  await adminStore.cekSession();
 });
 </script>
 
@@ -120,6 +126,7 @@ watch(filteredTx, () => {
     />
 
     <button
+      v-if="adminStore.isLoggedIn"
       class="bg-accent py-3 px-5 font-mono text-white rounded-md mt-20 cursor-pointer"
       @click="showExportModal = true"
     >
